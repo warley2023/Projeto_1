@@ -12,4 +12,5 @@ class Paciente(models.Model):
 
 class Cores(models.Model):
     Nome = models.CharField(max_length=15)
+    email = 'teste'
     
