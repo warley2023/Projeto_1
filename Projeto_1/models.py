@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import user
+
 
 class Paciente(models.Model):
     Nome = models.CharField(max_length=100, null=False)
@@ -27,3 +29,12 @@ class Triagem(models.Model):
 
     def __str__(self):
         return f"Triagem {self.id} - {self.paciente.Nome} - {self.Pressao} - {self.Temperatura}°C - {self.Peso}kg"
+
+class Meta:
+        permissions = [
+            ("pode_ver_paciente", "Pode visualizar pacientes"),
+            ("pode_editar_paciente", "Pode editar pacientes"),
+        ]
+
+if user.has_perm("app.pode_ver_paciente"):
+    print("Usuário tem permissão para visualizar pacientes!")
