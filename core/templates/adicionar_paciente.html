@@ -1,0 +1,19 @@
+<!-- adicionar_paciente.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Paciente</title>
+</head>
+<body>
+    <h1>Adicionar Paciente</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        <button type="submit">Adicionar</button>
+    </form>
+    <a href="{% url 'listar_paciente' %}">Voltar</a>
+</body>
+</html>
+

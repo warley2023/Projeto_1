@@ -1,0 +1,17 @@
+<!-- deletar_paciente.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Deletar Paciente</title>
+</head>
+<body>
+    <h1>Deletar Paciente</h1>
+    <p>Tem certeza que deseja deletar o paciente {{ paciente.nome }}?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Deletar</button>
+    </form>
+    <a href="{% url 'listar_pacientes' %}">Cancelar</a>
+</body>
+</html>
