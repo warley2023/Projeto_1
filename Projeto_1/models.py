@@ -7,7 +7,7 @@ class Paciente(models.Model):
     CPF = models.CharField(max_length=14, unique=True, null=False) 
     telefone = models.CharField(max_length=15, blank=True, null=True)  
     Data_Nascimento = models.DateField(null=False) 
-    Endereco = models.CharField(max_length=255, null=False)  
+    Endereco = models.CharField(max_length=255, null=False) 
 
     def __str__(self):
         return f"{self.Nome} - {self.telefone or 'Sem telefone'} - {self.CPF} - {self.Data_Nascimento} - {self.Endereco}"
@@ -26,6 +26,7 @@ class Triagem(models.Model):
     Temperatura = models.FloatField(null=False, blank=False)  
     Peso = models.FloatField(null=False)  
     Data_Triagem = models.DateTimeField(auto_now_add=True)
+    Hora_Triagem = 
 
     def __str__(self):
         return f"Triagem {self.id} - {self.paciente.Nome} - {self.Pressao} - {self.Temperatura}°C - {self.Peso}kg"
