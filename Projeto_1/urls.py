@@ -3,6 +3,7 @@ from django.urls import path
 from core.views import  login, listar_paciente, adicionar_paciente, editar_paciente, deletar_paciente, monitorar_paciente
 
 urlpatterns = [
+    path(''), index. name='index'),
     path('login/', login, name='login'),
     path('paciente/', listar_paciente, name='listar_paciente'),
     path('paciente/adicionar/', adicionar_paciente, name='adicionar_paciente'),
