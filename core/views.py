@@ -8,6 +8,7 @@ from .models import Paciente
 #user = User.objects.create_user(username="Admin", password="123456", email="Admin@email.com")
 #user.save()
 
+
 def minha_view(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -23,6 +24,11 @@ def minha_view(request):
             return render(request, "login.html", {"error": "Usuário ou senha inválidos."})
 
     return render(request, "login.html")
+
+def index(request):
+
+    return render( request. "index.html") 
+
 
 
 
