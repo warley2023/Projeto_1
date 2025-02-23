@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SIMPA MED</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        header {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+        }
+        nav a {
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+        section {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        footer {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+        .urgencia-cor {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        #data-hora {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SIMPA-MED | PRONTO ATENDIMENTO DE CANGUARETAMA</h1>
+        <div id="data-hora"></div>
+    </header>
+    <!--<nav>
+        <a href="{% url 'home' %}">HOME</a>
+        <a href="{% url 'adicionar_paciente' %}">CADASTRAR PACIENTES</a>
+    </nav> -->
+	
+    <script>
+        function atualizarDataHora() {
+            const agora = new Date();
+            const data = agora.toLocaleDateString();
+            const hora = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dataHora = `${data} - ${hora}`;
+            document.getElementById('data-hora').textContent = dataHora;
+        }
+        atualizarDataHora();
+        setInterval(atualizarDataHora, 60000);
+    </script>
+    <section>
+        <div>
+            <h2>PACIENTES EM ESPERA</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Urgência</th>
+                        <th>Entrada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paciente in pacientes_espera %}
+                        <tr>
+                            <td>{{ paciente.nome }}</td>
+                            <td>
+                                <span class="urgencia-cor" style="background-color: {{ paciente.get_urgencia_color }}; display: inline-block; margin: 0 auto;"></span>
+                            </td>
+                            <td>{{ paciente.data_hora_entrada|date:"d/m" }} - {{ paciente.data_hora_entrada|time:"H:i" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">Nenhum paciente cadastrado.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h2>PACIENTES CHAMADOS</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Destino</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paciente in pacientes_chamados %}
+                        <tr>
+                            <td>{{ paciente.nome }}</td>
+                            <td>{{ paciente.destino }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2">Nenhum paciente chamado.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h2>ACOLHIMENTO</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cor</th>
+                        <th>Nível</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="background-color: blue;">Azul</td>
+                        <td>Não Urgente</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: green;">Verde</td>
+                        <td>Pouco Urgente</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: yellow;">Amarelo</td>
+                        <td>Urgente</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: orange;">Laranja</td>
+                        <td>Muito Urgente</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: red;">Vermelho</td>
+                        <td>Emergência</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <footer>
+        <p>&copy IFRN - CANGUARETAMA</p>
+    </footer>
+</body>
+</html>

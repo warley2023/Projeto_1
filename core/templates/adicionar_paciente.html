@@ -1,19 +1,130 @@
-<!-- adicionar_paciente.html -->
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Adicionar Paciente</title>
+    <title>SIMPA MED - Adicionar Paciente</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        header {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+			background-color: #90EE90;
+        }
+        nav a {
+            padding: 10px;
+            text-decoration: none;
+            color: #111;
+			background-color: lightblue;
+			<!--font-weight: bold; -->
+        }
+        section {
+            padding: 20px;
+            display: flex;
+            justify-content: center; /* Centraliza o formulário */
+        }
+        form {
+            width: 400px; /* Largura do formulário */
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+		#data-hora { /* Seletor para o elemento do relógio */
+		font-size: 24px; /* Ajuste o tamanho da fonte */
+		font-weight: bold; /* Define o texto como negrito */
+		@media (max-width: 768px) {
+		section {
+        grid-template-columns: 1fr; /* Uma coluna em telas menores */
+				}
+			}
+		}
+    </style>
 </head>
 <body>
-    <h1>Adicionar Paciente</h1>
-    <form method="POST">
-        {% csrf_token %}
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required>
-        <button type="submit">Adicionar</button>
-    </form>
-    <a href="{% url 'listar_paciente' %}">Voltar</a>
+
+
+    <header>
+        <h1>SIMPA-MED | PRONTO ATENDIMENTO DE CANGUARETAMA</h1>
+    </header>
+    <nav>
+        <a href="{% url 'home' %}">HOME</a>
+        <a href="{% url 'adicionar_paciente' %}">CADASTRAR PACIENTES</a>
+		<a href="{% url 'recepcao' %}">TELA DA RECEPÇÃO</a>
+		<a href="{% url 'logout' %}">LOGOUT</a>
+    </nav>
+	
+	<script>
+    function atualizarDataHora() {
+        const agora = new Date();
+        const data = agora.toLocaleDateString(); // Formato da data: dd/mm/aaaa
+        const hora = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Formato da hora: hh:mm
+        const dataHora = `${data} - ${hora}`;
+        document.getElementById('data-hora').textContent = dataHora;
+    }
+
+    atualizarDataHora(); // Atualiza a data e hora ao carregar a página
+    setInterval(atualizarDataHora, 60000); // Atualiza a data e hora a cada minuto
+</script>
+	
+    <section>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="temperatura">Temperatura:</label>
+            <input type="number" id="temperatura" name="temperatura" step="0.1" required>
+
+            <label for="pressao_sistolica">Pressão Sistólica:</label>
+            <input type="number" id="pressao_sistolica" name="pressao_sistolica">
+
+            <label for="pressao_diastolica">Pressão Diastólica:</label>
+            <input type="number" id="pressao_diastolica" name="pressao_diastolica">
+
+            <label for="urgencia">Urgência:</label>
+            <select name="urgencia" id="urgencia">
+                <option value="azul">Azul</option>
+                <option value="verde">Verde</option>
+                <option value="amarelo">Amarelo</option>
+                <option value="laranja">Laranja</option>
+                <option value="vermelho">Vermelho</option>
+            </select>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+    </section>
+    <footer>
+        <p>&copy IFRN - CANGUARETAMA</p>
+    </footer>
 </body>
 </html>
-

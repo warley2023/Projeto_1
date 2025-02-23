@@ -1,17 +1,20 @@
-<!-- editar_paciente.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Paciente</title>
+    <title>Adicionar Paciente</title>
 </head>
 <body>
-    <h1>Editar Paciente</h1>
+    <h1>Adicionar Paciente</h1>
     <form method="POST">
         {% csrf_token %}
         <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" value="{{ paciente.nome }}" required>
-        <button type="submit">Salvar</button>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <label for="temperatura">Temperatura:</label>
+        <input type="number" id="temperatura" name="temperatura" step="0.1" required><br><br>
+
+        <button type="submit">Cadastrar</button>
     </form>
     <a href="{% url 'listar_pacientes' %}">Voltar</a>
 </body>

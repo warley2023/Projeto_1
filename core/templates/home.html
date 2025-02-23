@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SIMPA MED</title>
+	
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        header {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+		nav {
+            display: flex;
+            justify-content: space-around;
+			background-color: #90EE90;
+        }
+        nav a {
+            padding: 10px;
+            text-decoration: none;
+            color: #111;
+			background-color: lightblue;
+			<!--font-weight: bold; -->
+        }
+        section {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr; /* Três colunas */
+            gap: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        footer {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+        .chamar-btn {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .chamar-btn:hover {
+            background-color: #45a049;
+        }
+        .urgencia-cor {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+			
+		grid-template-columns:450px 450px 100px; /* Ajuste os valores em pixels */
+		gap: 20px;
+			
+        }
+		#data-hora { /* Seletor para o elemento do relógio */
+		font-size: 24px; /* Ajuste o tamanho da fonte */
+		font-weight: bold; /* Define o texto como negrito */
+		@media (max-width: 768px) {
+		section {
+        grid-template-columns: 1fr; /* Uma coluna em telas menores */
+				}
+			}
+		}
+		.data-hora-cell {
+		white-space: nowrap;
+		}
+		
+ 
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>SIMPA-MED | PRONTO ATENDIMENTO DE CANGUARETAMA</h1>
+	<div id="data-hora"></div> </header>
+    <nav>
+        <a href="{% url 'home' %}">HOME</a>
+        <a href="{% url 'adicionar_paciente' %}">CADASTRAR PACIENTES</a>
+		<a href="{% url 'recepcao' %}">TELA DA RECEPÇÃO</a>
+		<a href="{% url 'logout' %}">LOGOUT</a>
+    </nav>
+</header>
+<script>
+    function atualizarDataHora() {
+        const agora = new Date();
+        const data = agora.toLocaleDateString(); // Formato da data: dd/mm/aaaa
+        const hora = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Formato da hora: hh:mm
+        const dataHora = `${data} - ${hora}`;
+        document.getElementById('data-hora').textContent = dataHora;
+    }
+
+    atualizarDataHora(); // Atualiza a data e hora ao carregar a página
+    setInterval(atualizarDataHora, 60000); // Atualiza a data e hora a cada minuto
+</script>
+
+<section>
+    <div>
+        <h2>PACIENTES EM ESPERA</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Urgência</th>
+                    <th>Entrada</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes_espera %}
+                    <tr>
+                        <td>{{ paciente.nome }}</td>
+                        <td>
+                            <span class="urgencia-cor" style="background-color: {{ paciente.get_urgencia_color }}; display: inline-block; margin: 0 auto;"></span>
+                        </td>
+                        <td class="data-hora-cell">{{ paciente.data_hora_entrada|date:"d/m" }} - {{ paciente.data_hora_entrada|time:"H:i" }}</td>
+                        
+						<td><a href="{% url 'chamar_paciente' paciente.id %}" class="chamar-btn">Chamar</a></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">Nenhum paciente cadastrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h2>PACIENTES CHAMADOS</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Destino</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes_chamados %}
+                    <tr>
+                        <td>{{ paciente.nome }}</td>
+                        <td>{{ paciente.destino }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">Nenhum paciente chamado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h2>ACOLHIMENTO</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cor</th>
+                    <th>Nível</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="background-color: blue;">Azul</td>
+                    <td>Não Urgente</td>
+                </tr>
+                <tr>
+                    <td style="background-color: green;">Verde</td>
+                    <td>Pouco Urgente</td>
+                </tr>
+                <tr>
+                    <td style="background-color: yellow;">Amarelo</td>
+                    <td>Urgente</td>
+                </tr>
+                <tr>
+                    <td style="background-color: orange;">Laranja</td>
+                    <td>Muito Urgente</td>
+                </tr>
+                <tr>
+                    <td style="background-color: red;">Vermelho</td>
+                    <td>Emergência</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<footer>
+    <p>&copy IFRN - CANGUARETAMA</p>
+</footer>
+
+</body>
+</html>
