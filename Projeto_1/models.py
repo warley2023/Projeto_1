@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import user
 
 
-class Paciente(models.Model):
+class paciente(models.Model):
     Nome = models.CharField(max_length=100, null=False)
     CPF = models.CharField(max_length=14, unique=True, null=False) 
     telefone = models.CharField(max_length=15, blank=True, null=True)  
@@ -20,13 +20,13 @@ class Cores(models.Model):
         return f"{self.Nome} - {self.Tempo}"
 
 class Triagem(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE) 
+    paciente = models.ForeignKey(paciente, on_delete=models.CASCADE) 
     cor = models.ForeignKey(Cores, on_delete=models.SET_NULL, null=True, blank=True)  
     Pressao = models.CharField(max_length=15, null=False)  
     Temperatura = models.FloatField(null=False, blank=False)  
     Peso = models.FloatField(null=False)  
     Data_Triagem = models.DateTimeField(auto_now_add=True)
-    Hora_Triagem = 
+    Hora_Triagem = models.CharField
 
     def __str__(self):
         return f"Triagem {self.id} - {self.paciente.Nome} - {self.Pressao} - {self.Temperatura}°C - {self.Peso}kg"

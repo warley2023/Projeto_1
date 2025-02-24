@@ -1,6 +1,6 @@
 from django.db import models
 
-class Paciente(models.Model):
+class paciente(models.Model):
     nome = models.CharField(max_length=100)
     temperatura = models.FloatField()
     pressao = models.CharField(max_length=20)
