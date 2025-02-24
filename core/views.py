@@ -28,7 +28,8 @@ def login_view(request):
 
 
 def index(request):
-    return render(request, "index.html")
+    usuario = request.user 
+    return render(request, "index.html", {"usuario": usuario})
 
 
 def listar_paciente(request):

@@ -1,19 +1,29 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIMPA-MED</title>
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
 </head>
+
 <body>
     <div class="header">
         <h1>SIMPA-MED| PRONTO ATENDIMETO DE CANGUARETAMA</h1>
         <div id="clock">14:07:13</div>
         <div id="date">3 de fevereiro de 2025</div>
+        <div class="login">
+            {% if usuario.is_authenticated %}
+            <p>Bem-vindo, {{ usuario.username }}! Você está logado.</p>
+            {% else %}
+            <p>Você não está logado. <a href="{% url 'login' %}">Faça login</a></p>
+            {% endif %}
+
+        </div>
     </div>
-    
+
     <div class="container">
         <div class="waiting">
             <h2>Pacientes em Espera/Atendimento</h2>
@@ -77,6 +87,6 @@
             </div>
         </div>
     </div>
-    
+
     <script src="{% static 'js/index.js' %}"></script>
 </body>

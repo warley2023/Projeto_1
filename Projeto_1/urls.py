@@ -4,7 +4,8 @@ from core.views import  login_view, listar_paciente, adicionar_paciente, editar_
 
 urlpatterns = [
     path('', index, name='index'),
-    path('login/', login_view, name='login'),
+    path('admin/', admin.site.urls),
+    path('login/', login_view, name='login'),   
     path('paciente/', listar_paciente, name='listar_paciente'),
     path('paciente/adicionar/', adicionar_paciente, name='adicionar_paciente'),
     path('paciente/editar/<int:id>/', editar_paciente, name='editar_paciente'),
