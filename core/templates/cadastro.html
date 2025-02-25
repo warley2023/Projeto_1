@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SIMPA MED - Cadastro</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        header {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: #90EE90;
+        }
+        nav a {
+            padding: 10px;
+            text-decoration: none;
+            color: #111;
+            background-color: lightblue;
+        }
+        section {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh;
+        }
+        form {
+            width: 400px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        footer {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SIMPA-MED | PRONTO ATENDIMENTO DE CANGUARETAMA</h1>
+    </header>
+    <nav>
+        <a href="{% url 'home' %}">HOME</a>
+        <a href="{% url 'cadastro' %}">CADASTRO</a>
+        <a href="{% url 'logout' %}">LOGOUT</a>
+    </nav>
+    <section>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit">Cadastrar</button>
+        </form>
+    </section>
+    <footer>
+        <p>&copy IFRN - CANGUARETAMA</p>
+    </footer>
+</body>
+</html>

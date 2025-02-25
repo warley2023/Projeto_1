@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SIMPA MED - Chamar Paciente</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        header {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+        }
+        nav a {
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+        section {
+            padding: 20px;
+            display: flex;
+            justify-content: center; /* Centraliza o formulário */
+        }
+        form {
+            width: 400px; /* Largura do formulário */
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button, .link-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        button:hover, .link-button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            background-color: #90EE90;
+            padding: 10px;
+            text-align: center;
+        }
+		.button-group {
+            display: flex;
+            justify-content: left; /* Alinha os botões à esquerda */
+            margin-top: 20px; /* Adiciona espaço acima dos botões */
+        }
+        .button-group a, .button-group button {
+            margin-right: 10px; /* Adiciona espaço entre os botões */
+        }
+		button[type="submit"] {
+            margin-bottom: 20px; /* Adiciona espaço abaixo do botão */
+        }
+        .button-group {
+            display: flex;
+            justify-content: left;
+            margin-top: 20px;
+        }
+        .button-group a, .button-group button {
+            margin-right: 10px;
+			
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SIMPA-MED | PRONTO ATENDIMENTO DE CANGUARETAMA</h1>
+    </header>
+    <nav>
+        <a href="{% url 'home' %}">HOME</a>
+        <a href="{% url 'adicionar_paciente' %}">CADASTRAR PACIENTES</a>
+		<a href="{% url 'logout' %}">LOGOUT</a>
+    </nav>
+    <section>
+        <div>
+            <h1>Chamar Paciente</h1>
+            <p>Paciente: {{ paciente.nome }}</p>
+            <p>Urgência: {{ paciente.urgencia }}</p>
+
+            <form method="POST" action="{% url 'paciente_atendimento' paciente.id %}">
+                {% csrf_token %}
+                <label for="destino">Destino:</label>
+                <select name="destino" id="destino">
+                    <option value="Triagem">Triagem</option>
+                    <option value="Enfermaria">Enfermaria</option>
+                    <option value="Consultorio">Consultório</option>
+                    <option value="Outro">Outro</option>
+                </select><br><br>
+                <button type="submit">Iniciar Atendimento</button>
+            </form>
+
+            <a href="{% url 'paciente_evadiu' paciente.id %}" class="link-button">Evadiu</a>
+            <a href="{% url 'home' %}" class="link-button">Voltar</a>
+        </div>
+    </section>
+    <footer>
+        <p>&copy IFRN - CANGUARETAMA</p>
+    </footer>
+</body>
+</html>
