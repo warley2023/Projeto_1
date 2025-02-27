@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-#from .models import Paciente
+from .models import Paciente
 from core.models import Paciente
 from decimal import Decimal
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout 
 from .forms import CadastroForm
+import json
+import requests
+from django.http import HttpResponse, JsonResponse
 
 @login_required
 def home(request):
@@ -135,3 +138,8 @@ def cadastro_view(request):
     else:
         form = CadastroForm()
     return render(request, 'cadastro.html', {'form': form})
+
+def my_view(request):
+    response = requests.post('http://localhost:3000/usuarios/list')
+    usuarios = json.loads(response.content)
+    return render(request, "teste.html", {"usuarios":usuarios})

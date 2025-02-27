@@ -15,4 +15,5 @@ urlpatterns = [
     path('recepcao/', views.recepcao, name='recepcao'),
     path('logout/', views.logout_view, name='logout'),
     path('cadastro/', views.cadastro_view, name='cadastro'),
+    path('mensagens/', views.my_view, name='my_view')
 ]
