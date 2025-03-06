@@ -1,5 +1,6 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -15,5 +16,6 @@ urlpatterns = [
     path('recepcao/', views.recepcao, name='recepcao'),
     path('logout/', views.logout_view, name='logout'),
     path('cadastro/', views.cadastro_view, name='cadastro'),
-    path('mensagens/', views.my_view, name='my_view')
+    path('mensagens/', views.my_view, name='my_view'),
+    path('api/v1/', include('core.urls_api')),
 ]

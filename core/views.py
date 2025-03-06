@@ -10,6 +10,10 @@ from .forms import CadastroForm
 import json
 import requests
 from django.http import HttpResponse, JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Area
+from .serializers import AreaSerializer
 
 @login_required
 def home(request):
@@ -143,3 +147,10 @@ def my_view(request):
     response = requests.post('http://localhost:3000/usuarios/list')
     usuarios = json.loads(response.content)
     return render(request, "teste.html", {"usuarios":usuarios})
+
+
+class areaAPIlistar(APIView):
+    def get(self, request):
+        areas = Area.objects.all()
+        serializer = AreaSerializer(areas, many=True)
+        return Response(serializer.data)

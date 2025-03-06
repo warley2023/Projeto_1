@@ -57,3 +57,10 @@ class Paciente(models.Model):
         
     def __str__(self):
         return self.nome
+    
+class Area(models.Model):
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField()
+
+    def __str__(self):
+        return self.nome
