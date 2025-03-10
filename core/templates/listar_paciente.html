@@ -1,41 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pacientes</title>
 </head>
 <body>
     <h1>Lista de Pacientes</h1>
-    <table>
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Temperatura</th>
-            <th>Pressão</th>
-            <th>Urgência</th>
-            <th>Data e Hora</th>  <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for paciente in pacientes %}
-        <tr>
-            <td>{{ paciente.nome }}</td>
-            <td>
-                {% if paciente.temperatura %}
-                    {{ paciente.temperatura }}
-                {% else %}
-                    -
-                {% endif %}
-            </td>
-            <td>{{ paciente.pressao }}</td>
-            <td>{{ paciente.urgencia }}</td>
-            <td>{{ paciente.data_hora_entrada }}</td>  <td>
-                <a href="{% url 'editar_paciente' paciente.id %}">Editar</a> |
-                <a href="{% url 'deletar_paciente' paciente.id %}">Excluir</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Temperatura</th>
+                <th>Pressão</th>
+                <th>Urgência</th>
+                <th>Data e Hora</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paciente in pacientes %}
+            <tr>
+                <td>{{ paciente.nome }}</td>
+                <td>{{ paciente.temperatura|default:"-" }}</td>
+                <td>{{ paciente.pressao|default:"-" }}</td>
+                <td>{{ paciente.get_urgencia_display }}</td>
+                <td>{{ paciente.data_hora_entrada }}</td>
+                <td>
+                    <a href="{% url 'editar_paciente' paciente.id %}">Editar</a> |
+                    <a href="{% url 'deletar_paciente' paciente.id %}">Excluir</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <br>
     <a href="{% url 'adicionar_paciente' %}">Adicionar Paciente</a>
 </body>

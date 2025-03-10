@@ -1,4 +1,3 @@
-#core/models.py
 from django.db import models
 
 class Paciente(models.Model):
@@ -27,37 +26,47 @@ class Paciente(models.Model):
         ('alta', 'Alta'),
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='aguardando')
-    
-    
-    def get_urgencia_color(self):
-        if self.urgencia == 'azul':
-            return 'blue'
-        elif self.urgencia == 'verde':
-            return 'green'
-        elif self.urgencia == 'amarelo':
-            return 'yellow'
-        elif self.urgencia == 'laranja':
-            return 'orange'
-        elif self.urgencia == 'vermelho':
-            return 'red'
-        return 'gray'  # Cor padrão
 
-    def get_urgencia_text(self):
-        if self.urgencia == 'azul':
-            return 'Azul'
-        elif self.urgencia == 'verde':
-            return 'Verde'
-        elif self.urgencia == 'amarelo':
-            return 'Amarelo'
-        elif self.urgencia == 'laranja':
-            return 'Laranja'
-        elif self.urgencia == 'vermelho':
-            return 'Vermelho'
-        return ''  # Texto padrão
-        
+    # Adicionando o método para definir a prioridade da urgência (ordem numérica)
+    @property
+    def urgencia_order(self):
+        """
+        Retorna a prioridade numérica para cada nível de urgência, para ordenar corretamente.
+        Quanto menor o número, maior a prioridade.
+        """
+        prioridade = {
+            "vermelho": 1,  # Prioridade 1
+            "laranja": 2,   # Prioridade 2
+            "amarelo": 3,   # Prioridade 3
+            "verde": 4,     # Prioridade 4
+            "azul": 5       # Prioridade 5
+        }
+        return prioridade.get(self.urgencia, 5)  # Se não encontrar, assume a menor prioridade
+
+    class Meta:
+        # Remover a ordenação por urgencia_order, já que não é um campo no banco de dados
+        ordering = ['urgencia', 'data_hora_entrada']  # Ordena pela urgência e hora de entrada
+
+    def get_urgencia_color(self):
+        """
+        Retorna uma cor associada à urgência do paciente para visualização.
+        """
+        cores = {
+            'azul': 'blue',
+            'verde': 'green',
+            'amarelo': 'yellow',
+            'laranja': 'orange',
+            'vermelho': 'red'
+        }
+        return cores.get(self.urgencia, 'gray')  # Retorna a cor associada ou cinza por padrão
+
     def __str__(self):
-        return self.nome
-    
+        """
+        Método que retorna o nome do paciente seguido do texto da urgência.
+        """
+        return f"{self.nome} - {self.get_urgencia_display()}"  # Nome e descrição da urgência
+
+
 class Area(models.Model):
     nome = models.CharField(max_length=100)
     descricao = models.TextField()

@@ -12,27 +12,31 @@ import requests
 from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.db.models import Case, When, Value, IntegerField
 from .models import Area
 from .serializers import AreaSerializer
 
 @login_required
 def home(request):
-    
-    pacientes_espera = Paciente.objects.filter(status='aguardando')
-    pacientes_chamados = Paciente.objects.filter(status='atendimento')
-    pacientes_evadidos = Paciente.objects.filter(destino='evadiu').order_by('data_hora_entrada') # Query para pacientes evadidos
-        
+    prioridade_order = Case(
+        When(urgencia='vermelho', then=Value(1)),
+        When(urgencia='laranja', then=Value(2)),
+        When(urgencia='amarelo', then=Value(3)),
+        When(urgencia='verde', then=Value(4)),
+        When(urgencia='azul', then=Value(5)),
+        output_field=IntegerField(),
+    )
+
+    pacientes_espera = Paciente.objects.filter(status='aguardando').order_by(prioridade_order, 'data_hora_entrada')
+    pacientes_chamados = Paciente.objects.filter(status='atendimento').order_by('data_hora_entrada')
+    pacientes_evadidos = Paciente.objects.filter(destino='evadiu').order_by('data_hora_entrada')
+
     return render(request, 'home.html', {
         'pacientes_espera': pacientes_espera,
         'pacientes_chamados': pacientes_chamados,
-        'pacientes_evadidos': pacientes_evadidos,  # Adicione esta linha   
-        }
-    )
-    return render(request, 'home.html', {
-        'pacientes_chamados': pacientes_chamados,
-        }
-    )
-    
+        'pacientes_evadidos': pacientes_evadidos,
+    })
+
 @login_required
 def adicionar_paciente(request):
     if request.method == 'POST':
@@ -50,7 +54,7 @@ def adicionar_paciente(request):
             urgencia=urgencia,
             status='aguardando'  # Define o status como "aguardando"
         )
-        return redirect('home')  # Redireciona para a página inicial
+        return redirect('home')  
     return render(request, 'adicionar_paciente.html')
 
 @login_required
@@ -71,7 +75,6 @@ def editar_paciente(request, id):
     paciente = get_object_or_404(Paciente, pk=id)
     if request.method == 'POST':
         paciente.nome = request.POST.get('nome')
-        # Adicione aqui a lógica para os outros campos
         paciente.save()
         return redirect('home')
     return render(request, 'editar_paciente.html', {'paciente': paciente})
@@ -101,20 +104,30 @@ def paciente_atendimento(request, paciente_id):
     paciente = get_object_or_404(Paciente, pk=paciente_id)
     if request.method == 'POST':
         paciente.status = 'atendimento'
-        paciente.destino = request.POST.get('destino')  # Obtém o destino do formulário POST
+        paciente.destino = request.POST.get('destino')
         paciente.save()
         return redirect('home')
-    return redirect('chamar_paciente', paciente_id=paciente_id) #Redireciona caso não seja POST
-    
+    return redirect('chamar_paciente', paciente_id=paciente_id) 
+
+@login_required
 def recepcao(request):
-    pacientes_espera = Paciente.objects.filter(status='aguardando')
-    pacientes_chamados = Paciente.objects.filter(status='atendimento')
+    prioridade_order = Case(
+        When(urgencia='vermelho', then=Value(1)),
+        When(urgencia='laranja', then=Value(2)),
+        When(urgencia='amarelo', then=Value(3)),
+        When(urgencia='verde', then=Value(4)),
+        When(urgencia='azul', then=Value(5)),
+        output_field=IntegerField(),
+    )
+
+    pacientes_espera = Paciente.objects.filter(status='aguardando').order_by(prioridade_order, 'data_hora_entrada')
+    pacientes_chamados = Paciente.objects.filter(status='atendimento').order_by('data_hora_entrada')
+
     contexto = {
         'pacientes_espera': pacientes_espera,
         'pacientes_chamados': pacientes_chamados,
     }
     return render(request, 'recepcao.html', contexto)
-    
 
 def login_view(request):
     if request.method == 'POST':
@@ -123,22 +136,22 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')  # Redireciona para a página inicial após o login
+            return redirect('home')
         else:
             error_message = 'Usuário ou senha incorretos.'
             return render(request, 'login.html', {'error_message': error_message})
     return render(request, 'login.html')
-    
+
 def logout_view(request):
     logout(request)
-    return redirect('login') # Redireciona para a página de login após o logout
-    
+    return redirect('login')
+
 def cadastro_view(request):
     if request.method == 'POST':
         form = CadastroForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login') # Redireciona para a página de login após o cadastro
+            return redirect('login')
     else:
         form = CadastroForm()
     return render(request, 'cadastro.html', {'form': form})
@@ -147,7 +160,6 @@ def my_view(request):
     response = requests.post('http://localhost:3000/usuarios/list')
     usuarios = json.loads(response.content)
     return render(request, "teste.html", {"usuarios":usuarios})
-
 
 class areaAPIlistar(APIView):
     def get(self, request):
